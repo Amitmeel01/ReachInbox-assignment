@@ -14,22 +14,23 @@ To run this project locally, follow these steps:
    git clone https://github.com/Amitmeel01/ReachInbox-assignment.git
 Navigate to the Project Directory
 
-bash
-Copy code
-cd ReachInbox-assignment
-Install Dependencies
 
-bash
-Copy code
+cd ReachInbox-assignment
+
 npm install
+
+
 Start the Development Server
 
-bash
-Copy code
+
 npm run dev
+
+
 The project will start on localhost:5173. You can view it in your browser.
 
 Features
+
+
 Login Page
 
 Implements the design provided in the Figma file.
