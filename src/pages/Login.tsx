@@ -1,23 +1,58 @@
-import { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Import Link from React Router DOM
-import AppBar from "../components/AppBar";
-import google from "../assets/google.svg";
-import Footer from "../components/Footer";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import AppBar from '../components/AppBar';
+import google from '../assets/google.svg';
+import Footer from '../components/Footer';
+import { Link } from 'react-router-dom';
+
+interface UserProfile {
+  id: string;
+  email: string;
+  name: string;
+  picture: string;
+}
 
 function Login() {
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem('token');
+
+  // Function to extract token from URL
+  const getTokenFromUrl = () => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('token');
+  };
+
+  // Check for token in URL and store it in localStorage
+  useEffect(() => {
+    const urlToken = getTokenFromUrl();
+    if (urlToken) {
+      localStorage.setItem('token', urlToken);
+      navigate('/'); // Redirect to homepage or desired route after storing the token
+    }
+  }, [navigate]);
 
   useEffect(() => {
     if (token) {
-      navigate("/");
+      axios
+        .get('https://hiring.reachinbox.xyz/api/v1/user-profile', {
+          headers: {
+            Authorization: `${token}`,
+            Accept: 'application/json',
+          },
+        })
+        .then((res) => {
+          setProfile(res.data);
+          navigate('/'); // Redirect to profile page
+        })
+        .catch((err) => console.log(err));
     }
   }, [token, navigate]);
 
   const handleGoogleLogin = () => {
-    // Redirect to Google login URL
-    window.location.href =
-      "https://hiring.reachinbox.xyz/api/v1/auth/google-login?redirect_to=https://reach-inbox-assignment-phi.vercel.app/";
+    // Redirect user to the company's Google login API
+    window.location.href = 'https://hiring.reachinbox.xyz/api/v1/auth/google-login?redirect_to=http://localhost:5173/';
   };
 
   return (
@@ -29,9 +64,9 @@ function Login() {
             <div className="text-xl font-semibold mt-6">Create a new account</div>
             <div
               className="mt-6 border-white/40 border px-20 py-2 text-sm flex items-center text-[#CCCCCC] rounded-lg cursor-pointer"
-              onClick={handleGoogleLogin} // Call handleGoogleLogin function onClick
+              onClick={handleGoogleLogin}
             >
-              <img src={google} alt="google" className="w-4 mr-3"></img>
+              <img src={google} alt="google" className="w-4 mr-3" />
               Sign Up with Google
             </div>
           </div>
@@ -43,8 +78,8 @@ function Login() {
               Create an Account
             </Link>
             <div className="my-8 mb-10 text-[#909296]">
-              Already have an account?{" "}
-              <Link to="/signin" className="text-[#C1C2C5]">
+              Already have an account?{' '}
+              <Link to="/login" className="text-[#C1C2C5]">
                 Sign In
               </Link>
             </div>

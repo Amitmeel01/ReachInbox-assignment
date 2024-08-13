@@ -1,4 +1,3 @@
-// OneBox.js
 import { useEffect, useState } from "react";
 import SubView from "../components/SubView";
 import MainPage from "../components/MainPage";
@@ -7,35 +6,24 @@ import TopBar from "../components/TopBar";
 import { useLocation, useNavigate } from "react-router-dom";
 
 function OneBox() {
-  const Navigate = useNavigate();
+  const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const token = queryParams.get("token");
 
   useEffect(() => {
     if (!token) {
-      Navigate("/login");
-    }
-    if (token) {
+      navigate("/login"); // Redirect to login if no token
+    } else {
       localStorage.setItem("token", `Bearer ${token}`);
     }
-  }, [token]);
+  }, [token, navigate]);
 
-  const [selectedComponent, setSelectedComponent] = useState(null); 
+  const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
 
-  const handleMenuItemClick = (path: any) => {
+  const handleMenuItemClick = (path: string) => {
     setSelectedComponent(path);
   };
-
-  if (selectedComponent === null) {
-    return (
-      <div className="h-screen w-screen dark:bg-black bg-white pl-14">
-        <SideBar onMenuItemClick={handleMenuItemClick} />
-        <TopBar />
-        <SubView />
-      </div>
-    );
-  }
 
   return (
     <div className="h-screen w-screen dark:bg-black bg-white pl-14">
@@ -43,6 +31,7 @@ function OneBox() {
       <TopBar />
       <div>
         {/* Render the selected component */}
+        {selectedComponent === null && <SubView />}
         {selectedComponent === "/" && <SubView />}
         {selectedComponent === "/search" && <SubView />}
         {selectedComponent === "/mail" && <SubView />}

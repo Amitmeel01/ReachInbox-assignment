@@ -1,3 +1,4 @@
+import React from "react";
 import axios from "axios";
 import { CiSearch } from "react-icons/ci";
 import { FaAngleDown } from "react-icons/fa";
@@ -5,30 +6,47 @@ import { GoDotFill } from "react-icons/go";
 import { IoIosSend } from "react-icons/io";
 import { TbReload } from "react-icons/tb";
 
-function AllInbox({
-  data,
-  loadMail,
-}: {
-  data: any;
+interface AllInboxProps {
+  data: any[];
   loadMail: (threadId: number) => void;
-}) {
-  async function reloadHandler() {
-    const token = localStorage.getItem("token");
-    await axios.get("https://hiring.reachinbox.xyz/api/v1/onebox/reset", {
-      headers: {
-        Authorization: token,
-      },
-    });
+}
 
-    console.log("clicked");
-  }
+const AllInbox: React.FC<AllInboxProps> = ({ data, loadMail }) => {
+  const reloadHandler = async () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      console.error("No token found in localStorage");
+      return;
+    }
+
+    console.log("Token:", token);
+
+    try {
+     const data= await axios.get("https://hiring.reachinbox.xyz/api/v1/onebox/list", {
+        headers: {
+          Authorization: `Bearer ${token}`, // Ensure Bearer prefix
+        },
+      });
+      console.log(data);
+
+      console.log("Reload successful");
+    } catch (error) {
+      console.error("Error during reload:", error);
+    }
+  };
 
   if (!Array.isArray(data)) {
     console.error("Data is not an array:", data);
-    return null; // or render a placeholder, or handle the error as needed
+    return <div>Error loading inboxes.</div>; // Display an error message
   }
+
+  if (data.length === 0) {
+    return <div>Loading...</div>; // Display a loading indicator
+  }
+
   return (
-    <div className="border-r-2 bg-[#FAFAFA] dark:bg-black dark:dark:border-[#33383F] border-[#E0E0E0]  h-full overflow-y-scroll no-scrollbar">
+    <div className="border-r-2 bg-[#FAFAFA] dark:bg-black dark:dark:border-[#33383F] border-[#E0E0E0] h-full overflow-y-scroll no-scrollbar">
       <div className="px-4 pt-4 flex justify-between">
         <div className="px-4 ">
           <div className="text-2xl py-3 text-[#4285F4] font-semibold flex items-center">
@@ -70,7 +88,7 @@ function AllInbox({
       </div>
 
       <div>
-        {data.map((email: any) => (
+        {data.map((email) => (
           <Mail
             key={email.id}
             fromEmail={email.fromEmail}
@@ -82,19 +100,16 @@ function AllInbox({
       </div>
     </div>
   );
-}
+};
 
-function Mail({
-  fromEmail,
-  subject,
-  threadId,
-  loadMail,
-}: {
+interface MailProps {
   fromEmail: string;
   subject: string;
   threadId: number;
   loadMail: (threadId: number) => void;
-}) {
+}
+
+const Mail: React.FC<MailProps> = ({ fromEmail, subject, threadId, loadMail }) => {
   const trimSubject = (subject: string, wordCount: number) => {
     const words = subject.split(" ");
     if (words.length > wordCount) {
@@ -102,6 +117,7 @@ function Mail({
     }
     return subject;
   };
+
   const handleMailClick = () => {
     loadMail(threadId);
   };
@@ -113,8 +129,12 @@ function Mail({
     >
       <div>
         <div className="flex justify-between">
-          <div className="dark:text-white text-black text-lg font-normal">{fromEmail}</div>
-          <div className="dark:text-[#FCFCFC66] text-[#919EAB] font-thin pr-3">Mar 7</div>
+          <div className="dark:text-white text-black text-lg font-normal">
+            {fromEmail}
+          </div>
+          <div className="dark:text-[#FCFCFC66] text-[#919EAB] font-thin pr-3">
+            Mar 7
+          </div>
         </div>
         <div className="py-2 dark:text-[#E1E0E0] text-gray-600 font-normal">
           {trimSubject(subject, 7)}
@@ -132,6 +152,6 @@ function Mail({
       </div>
     </div>
   );
-}
+};
 
 export default AllInbox;
