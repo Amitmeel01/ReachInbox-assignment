@@ -1,50 +1,80 @@
-# React + TypeScript + Vite
+# ReachInbox Assignment
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Project Overview
 
-Currently, two official plugins are available:
+ReachInbox is a web application built with React, Vite, and TypeScript that simulates an inbox management system. The application integrates with a provided API to fetch, manage, and interact with email threads. It features a login page, an inbox (onebox) screen, a custom text editor, keyboard shortcuts, and support for both light and dark modes. The design is based on a Figma file, and the API is provided through Postman documentation.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Getting Started
 
-## Expanding the ESLint configuration
+To run this project locally, follow these steps:
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+1. **Clone the Repository**
 
-- Configure the top-level `parserOptions` property like this:
+   ```bash
+   git clone https://github.com/Amitmeel01/ReachInbox-assignment.git
+Navigate to the Project Directory
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+bash
+Copy code
+cd ReachInbox-assignment
+Install Dependencies
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+bash
+Copy code
+npm install
+Start the Development Server
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+bash
+Copy code
+npm run dev
+The project will start on localhost:5173. You can view it in your browser.
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+Features
+Login Page
+
+Implements the design provided in the Figma file.
+Users are redirected to the onebox screen upon successful login.
+Onebox Screen
+
+Fetches and displays data from the provided API endpoints.
+API Integration:
+GET /onebox/list - Fetch list of threads
+GET /onebox/:thread_id - Fetch details of a specific thread
+DELETE /onebox/:thread_id - Delete a specific thread
+Keyboard Shortcuts
+
+"D" - Deletes the selected thread.
+"R" - Opens the reply box.
+Custom Text Editor
+
+Includes custom buttons:
+"SAVE" - Saves the current draft.
+"Variables" - Adds predefined variables to the email body.
+Reply Functionality
+
+Allows sending replies to threads.
+API Integration:
+POST /reply/:thread_id - Send a reply with the following payload:
+json
+Copy code
+{
+  "from": "email",
+  "to": "email",
+  "subject": "",
+  "body": "<html></html>"
+}
+Light and Dark Mode
+
+Supports switching between light and dark themes.
+
+Design File
+The design for the application is available at:
+Design File - Figma
+
+API Documentation
+The API documentation is available at:
+API File - Postman
+
+Contributing
+If you would like to contribute to this project, please fork the repository and submit a pull request with your changes.
+
