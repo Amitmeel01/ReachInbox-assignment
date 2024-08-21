@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react'; // Removed React import
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import AppBar from '../components/AppBar';
 import google from '../assets/google.svg';
 import Footer from '../components/Footer';
-import { Link } from 'react-router-dom';
 
 interface UserProfile {
   id: string;
@@ -14,7 +13,6 @@ interface UserProfile {
 }
 
 function Login() {
-  const [profile, setProfile] = useState<UserProfile | null>(null);
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
@@ -43,7 +41,7 @@ function Login() {
           },
         })
         .then((res) => {
-          setProfile(res.data);
+          // setProfile(res.data); // Removed unused profile state
           navigate('/'); // Redirect to profile page
         })
         .catch((err) => console.log(err));
