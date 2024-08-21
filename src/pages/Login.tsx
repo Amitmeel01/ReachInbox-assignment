@@ -1,16 +1,10 @@
-import { useState, useEffect } from 'react'; // Removed React import
+import { useEffect } from 'react'; // Removed React import
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import AppBar from '../components/AppBar';
 import google from '../assets/google.svg';
 import Footer from '../components/Footer';
 
-interface UserProfile {
-  id: string;
-  email: string;
-  name: string;
-  picture: string;
-}
 
 function Login() {
   const navigate = useNavigate();
@@ -40,7 +34,7 @@ function Login() {
             Accept: 'application/json',
           },
         })
-        .then((res) => {
+        .then(() => {
           // setProfile(res.data); // Removed unused profile state
           navigate('/'); // Redirect to profile page
         })
